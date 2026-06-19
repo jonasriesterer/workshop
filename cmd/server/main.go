@@ -3,6 +3,7 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"log/slog"
 	"net/http"
 	"os"
@@ -12,6 +13,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/myorg/myservice/config"
@@ -53,7 +55,9 @@ func main() {
 		}
 	}
 
-	srv := server.New(cfg, pool)
+	verifier := newOIDCVerifier(ctx, cfg)
+
+	srv := server.New(cfg, pool, verifier)
 
 	go func() {
 		slog.Info("server listening", "addr", cfg.Addr())
@@ -106,4 +110,27 @@ func csvSeedsDir() string {
 	_, filename, _, _ := runtime.Caller(0)
 	root := filepath.Join(filepath.Dir(filename), "..", "..")
 	return filepath.Join(root, "db", "seeds")
+}
+
+// newOIDCVerifier initializes a Keycloak OIDC provider and returns an IDTokenVerifier.
+// When KC_SKIP_TLS_VERIFY is true (default for development) TLS certificate
+// verification is disabled so that Keycloak's self-signed certificate is accepted.
+func newOIDCVerifier(ctx context.Context, cfg *config.Config) *oidc.IDTokenVerifier {
+	httpClient := &http.Client{}
+	if cfg.KCSkipTLSVerify {
+		httpClient.Transport = &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, //nolint:gosec
+		}
+	}
+
+	oidcCtx := oidc.ClientContext(ctx, httpClient)
+
+	provider, err := oidc.NewProvider(oidcCtx, cfg.KCIssuerURL)
+	if err != nil {
+		slog.Error("failed to initialize OIDC provider", "issuer", cfg.KCIssuerURL, "err", err)
+		os.Exit(1)
+	}
+	slog.Info("OIDC provider initialized", "issuer", cfg.KCIssuerURL)
+
+	return provider.Verifier(&oidc.Config{ClientID: cfg.KCClientID})
 }
