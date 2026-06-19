@@ -21,6 +21,10 @@ type Config struct {
 	DBSSLMode  string
 
 	TestMode bool
+
+	KCIssuerURL     string
+	KCClientID      string
+	KCSkipTLSVerify bool
 }
 
 // Load reads configuration from environment variables.
@@ -38,6 +42,10 @@ func Load() *Config {
 		DBSSLMode:  getEnv("DB_SSLMODE", "disable"),
 
 		TestMode: getEnv("TEST_MODE", "false") == "true",
+
+		KCIssuerURL:     getEnv("KC_ISSUER_URL", "https://localhost:8843/realms/go_workshop"),
+		KCClientID:      getEnv("KC_CLIENT_ID", "go-client"),
+		KCSkipTLSVerify: getEnv("KC_SKIP_TLS_VERIFY", "true") == "true",
 	}
 }
 
