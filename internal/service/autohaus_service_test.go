@@ -29,12 +29,12 @@ func (m *mockRepo) Create(ctx context.Context, a *model.Autohaus) (uint, error) 
 
 func TestGetByID_ReturnsAutohaus(t *testing.T) {
 	expected := &model.Autohaus{
-		ID:       100,
-		Name:     "Autohaus Karlsruhe",
-		Username: "autohaus_karlsruhe",
-		Email:    "kontakt@autohaus-karlsruhe.de",
+		ID:              100,
+		Name:            "Autohaus Karlsruhe",
+		Username:        "autohaus_karlsruhe",
+		Email:           "kontakt@autohaus-karlsruhe.de",
 		Gruendungsdatum: time.Date(1998, 5, 12, 0, 0, 0, 0, time.UTC),
-		Adresse: model.Adresse{PLZ: "76131", Ort: "Karlsruhe", Land: "Deutschland"},
+		Adresse:         model.Adresse{PLZ: "76131", Ort: "Karlsruhe", Land: "Deutschland"},
 	}
 
 	repo := &mockRepo{

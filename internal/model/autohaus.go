@@ -19,4 +19,3 @@ type Autohaus struct {
 	Adresse Adresse `json:"adresse"`
 	Autos   []Auto  `json:"autos"`
 }
-
