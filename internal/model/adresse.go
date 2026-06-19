@@ -1,5 +1,7 @@
+// Package model enthält die Datenstrukturen aller Entitäten.
 package model
 
+// Adresse repräsentiert die Anschrift eines Autohauses.
 type Adresse struct {
 	ID         uint   `json:"id"`
 	PLZ        string `json:"plz"  validate:"required,len=5,numeric"`

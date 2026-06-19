@@ -1,3 +1,4 @@
+// Package config lädt und stellt die Anwendungskonfiguration bereit.
 package config
 
 import (

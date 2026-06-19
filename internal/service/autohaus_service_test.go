@@ -6,11 +6,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/myorg/myservice/internal/model"
 	"github.com/myorg/myservice/internal/repository"
 	"github.com/myorg/myservice/internal/service"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 // mockRepo is a test double for AutohausRepository.

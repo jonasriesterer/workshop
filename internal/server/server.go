@@ -1,3 +1,4 @@
+// Package server konfiguriert und startet den HTTP-Server.
 package server
 
 import (
@@ -5,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
+
 	"github.com/myorg/myservice/config"
 	"github.com/myorg/myservice/internal/handler"
 	"github.com/myorg/myservice/internal/repository"

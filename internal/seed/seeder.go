@@ -1,3 +1,4 @@
+// Package seed befüllt die Datenbank mit Testdaten aus CSV-Dateien.
 package seed
 
 import (
@@ -42,7 +43,7 @@ func readCSV(path string) ([]map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	r := csv.NewReader(f)
 	r.Comma = ';'

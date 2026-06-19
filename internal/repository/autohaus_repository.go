@@ -1,3 +1,4 @@
+// Package repository implementiert den Datenbankzugriff für alle Entitäten.
 package repository
 
 import (
@@ -8,6 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
+
 	"github.com/myorg/myservice/internal/db"
 	"github.com/myorg/myservice/internal/model"
 )

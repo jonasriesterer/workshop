@@ -10,13 +10,14 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/myorg/myservice/internal/model"
-	"github.com/myorg/myservice/internal/repository"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	tcpostgres "github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"
+
+	"github.com/myorg/myservice/internal/model"
+	"github.com/myorg/myservice/internal/repository"
 )
 
 func setupTestDB(t *testing.T) *pgxpool.Pool {
@@ -50,7 +51,7 @@ func setupTestDB(t *testing.T) *pgxpool.Pool {
 	return pool
 }
 
-func applyMigrations(t *testing.T, ctx context.Context, pool *pgxpool.Pool) {
+func applyMigrations(t *testing.T, ctx context.Context, pool *pgxpool.Pool) { //nolint:revive
 	t.Helper()
 	_, filename, _, _ := runtime.Caller(0)
 	root := filepath.Join(filepath.Dir(filename), "..", "..")

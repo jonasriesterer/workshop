@@ -1,3 +1,4 @@
+// Package handler enthält die HTTP-Handler für alle Endpunkte.
 package handler
 
 import (
@@ -9,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+
 	"github.com/myorg/myservice/internal/model"
 	"github.com/myorg/myservice/internal/repository"
 	"github.com/myorg/myservice/internal/service"

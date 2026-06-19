@@ -2,6 +2,7 @@ package model
 
 import "time"
 
+// Autohaus ist das Aggregate Root und repräsentiert ein Autohaus mit Adresse und Fahrzeugen.
 type Autohaus struct {
 	ID              uint      `json:"id"`
 	Name            string    `json:"name"            validate:"required,min=2,max=100"`

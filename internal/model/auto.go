@@ -1,5 +1,6 @@
 package model
 
+// Auto repräsentiert ein Fahrzeug, das einem Autohaus zugeordnet ist.
 type Auto struct {
 	ID          uint   `json:"id"`
 	Kennzeichen string `json:"kennzeichen" validate:"required,min=3,max=10"`

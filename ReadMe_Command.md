@@ -53,6 +53,7 @@ go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out
 ```bash
 go vet ./...                         # statische Analyse (eingebaut)
 go fmt ./...                         # Code formatieren
+golangci-lint run ./...              # Linter
 gofmt -l .                           # zeigt Dateien, die formatiert werden müssten
 
 # Externe Tools (einmalig installieren)

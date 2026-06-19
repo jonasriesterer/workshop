@@ -1,3 +1,4 @@
+// Package service enthält die Geschäftslogik für alle Entitäten.
 package service
 
 import (
