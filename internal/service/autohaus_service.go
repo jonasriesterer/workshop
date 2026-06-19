@@ -13,6 +13,8 @@ import (
 type AutohausService interface {
 	GetByID(ctx context.Context, id uint) (*model.Autohaus, error)
 	Create(ctx context.Context, a *model.Autohaus) (uint, error)
+	Update(ctx context.Context, a *model.Autohaus) error
+	Delete(ctx context.Context, id uint) error
 }
 
 type autohausService struct {
@@ -38,4 +40,18 @@ func (s *autohausService) Create(ctx context.Context, a *model.Autohaus) (uint, 
 		return 0, fmt.Errorf("service.Create: %w", err)
 	}
 	return id, nil
+}
+
+func (s *autohausService) Update(ctx context.Context, a *model.Autohaus) error {
+	if err := s.repo.Update(ctx, a); err != nil {
+		return fmt.Errorf("service.Update id=%d: %w", a.ID, err)
+	}
+	return nil
+}
+
+func (s *autohausService) Delete(ctx context.Context, id uint) error {
+	if err := s.repo.Delete(ctx, id); err != nil {
+		return fmt.Errorf("service.Delete id=%d: %w", id, err)
+	}
+	return nil
 }

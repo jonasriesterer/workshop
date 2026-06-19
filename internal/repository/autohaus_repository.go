@@ -17,10 +17,15 @@ import (
 // ErrNotFound is returned when the requested entity does not exist.
 var ErrNotFound = errors.New("not found")
 
+// ErrConflict is returned when an optimistic locking version check fails.
+var ErrConflict = errors.New("conflict")
+
 // AutohausRepository defines the persistence operations for Autohaus.
 type AutohausRepository interface {
 	FindByID(ctx context.Context, id uint) (*model.Autohaus, error)
 	Create(ctx context.Context, a *model.Autohaus) (uint, error)
+	Update(ctx context.Context, a *model.Autohaus) error
+	Delete(ctx context.Context, id uint) error
 }
 
 type autohausRepository struct {
@@ -120,6 +125,73 @@ func (r *autohausRepository) Create(ctx context.Context, a *model.Autohaus) (uin
 	}
 
 	return uint(newID), nil
+}
+
+func (r *autohausRepository) Update(ctx context.Context, a *model.Autohaus) error {
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx) //nolint:errcheck
+
+	q := r.queries.WithTx(tx)
+
+	var gruendungsdatum pgtype.Date
+	_ = gruendungsdatum.Scan(a.Gruendungsdatum)
+
+	var homepage pgtype.Text
+	if a.Homepage != "" {
+		homepage = pgtype.Text{String: a.Homepage, Valid: true}
+	}
+
+	var telefonnr pgtype.Text
+	if a.Telefonnr != "" {
+		telefonnr = pgtype.Text{String: a.Telefonnr, Valid: true}
+	}
+
+	rowsAffected, err := q.UpdateAutohaus(ctx, db.UpdateAutohausParams{
+		Name:            a.Name,
+		Username:        a.Username,
+		Email:           a.Email,
+		AnzahlFahrzeuge: int32(a.AnzahlFahrzeuge),
+		Gruendungsdatum: gruendungsdatum,
+		Homepage:        homepage,
+		Telefonnummer:   telefonnr,
+		ID:              int32(a.ID),
+		Version:         int32(a.Version),
+	})
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		_, err := q.GetAutohausById(ctx, int32(a.ID))
+		if errors.Is(err, pgx.ErrNoRows) {
+			return ErrNotFound
+		}
+		return ErrConflict
+	}
+
+	if err := q.UpdateAdresse(ctx, db.UpdateAdresseParams{
+		Plz:        a.Adresse.PLZ,
+		Ort:        a.Adresse.Ort,
+		Land:       a.Adresse.Land,
+		AutohausID: int32(a.ID),
+	}); err != nil {
+		return err
+	}
+
+	return tx.Commit(ctx)
+}
+
+func (r *autohausRepository) Delete(ctx context.Context, id uint) error {
+	rowsAffected, err := r.queries.DeleteAutohaus(ctx, int32(id))
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return ErrNotFound
+	}
+	return nil
 }
 
 func toModel(row db.Autohau, adresse db.Adresse, autos []db.Auto) *model.Autohaus {

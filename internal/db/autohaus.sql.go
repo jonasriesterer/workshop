@@ -166,3 +166,74 @@ func (q *Queries) GetAutosByAutohausId(ctx context.Context, autohausID int32) ([
 	}
 	return items, nil
 }
+
+const updateAutohaus = `-- name: UpdateAutohaus :execrows
+UPDATE autohaus
+SET name             = $1,
+    username         = $2,
+    email            = $3,
+    anzahl_fahrzeuge = $4,
+    gruendungsdatum  = $5,
+    homepage         = $6,
+    telefonnummer    = $7,
+    version          = version + 1,
+    aktualisiert     = NOW()
+WHERE id      = $8
+  AND version = $9
+`
+
+type UpdateAutohausParams struct {
+	Name            string      `db:"name" json:"name"`
+	Username        string      `db:"username" json:"username"`
+	Email           string      `db:"email" json:"email"`
+	AnzahlFahrzeuge int32       `db:"anzahl_fahrzeuge" json:"anzahl_fahrzeuge"`
+	Gruendungsdatum pgtype.Date `db:"gruendungsdatum" json:"gruendungsdatum"`
+	Homepage        pgtype.Text `db:"homepage" json:"homepage"`
+	Telefonnummer   pgtype.Text `db:"telefonnummer" json:"telefonnummer"`
+	ID              int32       `db:"id" json:"id"`
+	Version         int32       `db:"version" json:"version"`
+}
+
+func (q *Queries) UpdateAutohaus(ctx context.Context, arg UpdateAutohausParams) (int64, error) {
+	result, err := q.db.Exec(ctx, updateAutohaus,
+		arg.Name,
+		arg.Username,
+		arg.Email,
+		arg.AnzahlFahrzeuge,
+		arg.Gruendungsdatum,
+		arg.Homepage,
+		arg.Telefonnummer,
+		arg.ID,
+		arg.Version,
+	)
+	return result.RowsAffected(), err
+}
+
+const updateAdresse = `-- name: UpdateAdresse :exec
+UPDATE adresse
+SET plz  = $1,
+    ort  = $2,
+    land = $3
+WHERE autohaus_id = $4
+`
+
+type UpdateAdresseParams struct {
+	Plz        string `db:"plz" json:"plz"`
+	Ort        string `db:"ort" json:"ort"`
+	Land       string `db:"land" json:"land"`
+	AutohausID int32  `db:"autohaus_id" json:"autohaus_id"`
+}
+
+func (q *Queries) UpdateAdresse(ctx context.Context, arg UpdateAdresseParams) error {
+	_, err := q.db.Exec(ctx, updateAdresse, arg.Plz, arg.Ort, arg.Land, arg.AutohausID)
+	return err
+}
+
+const deleteAutohaus = `-- name: DeleteAutohaus :execrows
+DELETE FROM autohaus WHERE id = $1
+`
+
+func (q *Queries) DeleteAutohaus(ctx context.Context, id int32) (int64, error) {
+	result, err := q.db.Exec(ctx, deleteAutohaus, id)
+	return result.RowsAffected(), err
+}
