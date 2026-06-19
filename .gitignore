@@ -1,5 +1,8 @@
 bin/
 .env
-.env.example
 *.test
 tmp/
+certs/
+extras/postgres/password.txt
+extras/postgres/init/tls/
+extras/postgres/tls/
