@@ -30,9 +30,9 @@ go-playground/validator mit `validate:"..."` Struct-Tags (z. B. `required`, `ema
 
 SQLC zur Code-Generierung aus SQL-Queries + pgx als PostgreSQL-Treiber
 
-### Optional: OIDC mit Keycloak
+### OIDC mit Keycloak
 
-`github.com/coreos/go-oidc/v3` — JWT Bearer Token Validierung über Keycloak OIDC Discovery (JWKS).
+JWT Bearer Token Validierung über Keycloak OIDC Discovery (JWKS).
 
 - Realm: `go_workshop`, Client: `go-client`
 - Rollen (Client-Rollen): `admin`, `user`
