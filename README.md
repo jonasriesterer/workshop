@@ -32,7 +32,14 @@ SQLC zur Code-Generierung aus SQL-Queries + pgx als PostgreSQL-Treiber
 
 ### Optional: OIDC mit Keycloak
 
-nicht implementiert
+`github.com/coreos/go-oidc/v3` — JWT Bearer Token Validierung über Keycloak OIDC Discovery (JWKS).
+
+- Realm: `go_workshop`, Client: `go-client`
+- Rollen (Client-Rollen): `admin`, `user`
+- `POST /rest`, `PUT /rest/:id` → Rolle `admin` oder `user` erforderlich (sonst `401`/`403`)
+- `DELETE /rest/:id` → nur Rolle `admin` (sonst `401`/`403`)
+- `GET /rest/:id` → öffentlich, kein Token nötig
+- TLS-Verify für self-signed Keycloak-Zertifikat deaktivierbar via `KC_SKIP_TLS_VERIFY=true`
 
 ### Einfacher Integrationstest
 
@@ -55,6 +62,46 @@ id, plz, ort, land, Autohaus
 - funktioniert, aber es sieht nicht schön aus. ich will die response nicht als json datensatz, sondern die einzelnen eigenschaften immer mit einem passenden icon angezeigt bekommen untereinander
 - ich will jetzt noch weitere endpunkte einbauen. einmal standard put, einmal standard delete. dann will ich noch bedingte get requests haben mit 304 not modified als antwort, wenn die versionsnummer sich nicht verändert hat. bei dem update mit put soll kein body zurück gegeben werden
 - ich brauche noch ein docker file, damit ich meinen server auch in docker laufen lassen kann. erstell mir das nötige file
+
+### Cascase (Devin Desktop)
+
+Prompt 1:
+
+Ausgangssituation
+
+* Go als Plattform
+* DB-Server aus den vorangegangenen Abgaben
+* Keycloak ist optional
+
+
+Wir müssen einen Backend server in Go implementieren, kannst du mir einen Plan machen wie das ganze aufgesetzt werden muss. Ich hab bisschen recherchiert und mich für folgende tools entschieden:
+Sprache? Go
+Web-Framework? Gin
+Linter? golangci-lint
+Formatter? goimports
+Logger? log/slog
+ORM? sqlc
+
+Testing?
+- testing:  test.go datei endungen --> mit go test laufen lassen, unterstützt unit tests, benchmarks, fuzzing
+-stretchr/testify
+-testcontainers-go für integrationstests 
+
+
+Kannst du das validieren und darauf basierend dann einen plan erstellen wie die ganzen tools in das bereits bestehende Setup integriert werden können?
+
+Wir haben ein datenbank setup (sql dateien) und entitäten von einem anderen Projekt, die wir verwenden sollen, da kannst du dann auch mal schauen wie wir das integriert bekommen. Es soll einen Test-Modus geben (Umgebungsvariable), wo bei "true" die Datenbank neulädt und die csv daten reinlädt (DB Seeding) für den Testmodus, bei "false" soll das ganze nicht passieren.
+
+Die Entitäten existieren bereits
+Implementiere eine Schnittstelle mit  ersteinmal einen GET Request und einem POST Request passend zur Fachdomäne. Der Zugriff soll über das AggregateRoot "Authohaus" geschehen. Nutze dabei die bestehende Struktur mit handler, model (hier sind die entitäten), service für Geschäftslogik und repository für den DB-Zugriff. Nutze für POST ein sinnvolles Validierungstool
+
+Implementiere dann die Tests (Unit- und Integrationstests), ein paar wenige reichen.
+
+Verwende bitte alle oben gennanten Tools sinnvoll.
+
+Prompt 2:
+
+Kannst du noch keycloak für die POST, PUT und DELETE Endpunkte security mit keycloak einbauen, in der readme unter keycloak sieht man, dass es nur die Rolle admin und user gibt, bei delete braucht man die rolle admin ansonsten passt admin oder user.
 
 
 ## Projektbeschreibung
