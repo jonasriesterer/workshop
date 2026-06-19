@@ -1,0 +1,36 @@
+include:
+  - path: ../postgres/compose.yml
+  - path: ../keycloak/compose.yml
+
+services:
+  autohaus:
+    build:
+      context: ../../..
+      dockerfile: Dockerfile
+    ports:
+      - published: 3000
+        target: 3000
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: autohaus
+      DB_USER: autohaus
+      DB_PASSWORD: p
+      DB_SSLMODE: disable
+      TEST_MODE: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [acme-network]
+    hostname: autohaus
+    container_name: autohaus
+    cap_drop: [ALL]
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+        reservations:
+          cpus: "0.5"
+          memory: 64M
