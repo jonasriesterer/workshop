@@ -14,6 +14,7 @@ PORT=9090 APP_ENV=production go run ./cmd/server
 
 # Mit air (Live-Reload, empfohlen für dev)
 go install github.com/air-verse/air@latest
+air init
 air
 ```
 
