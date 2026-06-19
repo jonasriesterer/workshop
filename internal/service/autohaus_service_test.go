@@ -18,6 +18,8 @@ import (
 type mockRepo struct {
 	findByIDFn func(ctx context.Context, id uint) (*model.Autohaus, error)
 	createFn   func(ctx context.Context, a *model.Autohaus) (uint, error)
+	updateFn   func(ctx context.Context, a *model.Autohaus) error
+	deleteFn   func(ctx context.Context, id uint) error
 }
 
 func (m *mockRepo) FindByID(ctx context.Context, id uint) (*model.Autohaus, error) {
@@ -26,6 +28,20 @@ func (m *mockRepo) FindByID(ctx context.Context, id uint) (*model.Autohaus, erro
 
 func (m *mockRepo) Create(ctx context.Context, a *model.Autohaus) (uint, error) {
 	return m.createFn(ctx, a)
+}
+
+func (m *mockRepo) Update(ctx context.Context, a *model.Autohaus) error {
+	if m.updateFn != nil {
+		return m.updateFn(ctx, a)
+	}
+	return nil
+}
+
+func (m *mockRepo) Delete(ctx context.Context, id uint) error {
+	if m.deleteFn != nil {
+		return m.deleteFn(ctx, id)
+	}
+	return nil
 }
 
 func TestGetByID_ReturnsAutohaus(t *testing.T) {
