@@ -1,12 +1,16 @@
 # Programmierworkshop am 19.6.2026
 
 ## Namen
+Jonas Riesterer, Nikolas Vix
 
 ## Link zum Git-Repository
+https://github.com/jonasriesterer/workshop
 
 ## KI-Werkzeuge
+Devin Desktop, Claude
 
 ### Agenten
+Cascade
 
 ### Chat-URLs, z.B. https://chatgpt.com
 
