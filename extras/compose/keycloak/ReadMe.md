@@ -80,8 +80,8 @@ Zunächst wird das Named Volume `kc_data_reclaim` für die künftigen Daten und 
 Volume `kc_tls_reclaim` für das Zertifikat und den privaten Schlüssel angelegt:
 
 ```shell
-    docker volume create kc_data_reclaim
-    docker volume create kc_tls_reclaim
+    docker volume create kc_data_go
+    docker volume create kc_tls_go
 ```
 
 Für Details zu Volumes siehe https://docs.docker.com/engine/storage/volumes.
@@ -96,12 +96,12 @@ sowie die Berechtigung zum Ändern vom Linux-Owner und von der Linux-Group (s.u.
 ```shell
     # Windows
     cd extras\compose\keycloak
-    docker run -v kc_tls_reclaim:/opt/keycloak/tls -v ./tls:/tmp/tls:ro `
+    docker run -v kc_tls_go:/opt/keycloak/tls -v ./tls:/tmp/tls:ro `
       --rm -it -u 0:0 --entrypoint '' dhi.io/keycloak:26.6.1-debian13 /bin/bash
 
     # macOS/Linux
     cd extras/compose/keycloak
-    docker run -v kc_tls_reclaim:/opt/keycloak/tls -v ./tls:/tmp/tls:ro \
+    docker run -v kc_tls_go:/opt/keycloak/tls -v ./tls:/tmp/tls:ro \
       --rm -it -u 0:0 --entrypoint '' dhi.io/keycloak:26.6.1-debian13 /bin/bash
 
         cp /tmp/tls/certificate.crt /opt/keycloak/tls/kc_cert
@@ -112,11 +112,11 @@ sowie die Berechtigung zum Ändern vom Linux-Owner und von der Linux-Group (s.u.
         exit
 ```
 
-Um das Zertifikat und den privaten Schlüssel in das Named Volume `kc_tls_reclaim` kopieren
+Um das Zertifikat und den privaten Schlüssel in das Named Volume `kc_tls_go` kopieren
 zu können, wurde das lokale Verzeichnis `.\tls` in `/tmp/tls` bereitgestellt.
 In der _bash_ werden deshalb das Zertifikat und der private Schlüssel aus dem
 Verzeichnis `/tmp/tls` nach `/opt/keycloak/tls` und deshalb in das Named Volume
-`kc_tls_reclaim` kopiert. Danach wird der Linux-Owner und die -Gruppe jeweils auf `nonroot`
+`kc_tls_go` kopiert. Danach wird der Linux-Owner und die -Gruppe jeweils auf `nonroot`
 gesetzt.
 
 Jetzt kann der Container für _Keycloak_ gestartet werden:
@@ -171,13 +171,13 @@ Das Mapping von Port `8443` auf `8843` und von `8080` auf `8880` ist in
 
     Menüpunkt "Manage realms" anklicken
         Button <Create realm> anklicken
-            Realm name      javascript
+            Realm name      go_workshop
             <Create> anklicken
 
     Menüpunkt "Clients"
         <Create client> anklicken
-        Client ID   javascript-client
-        Name        JavaScript Client
+        Client ID   go-client
+        Name        Go Client
         <Next>
             "Capability config"
                 Client authentication       On
@@ -191,7 +191,7 @@ Das Mapping von Port `8443` auf `8843` und von `8080` auf `8880` ist in
             Web origins             +
         <Save>
 
-        javascript-client
+        go-client
             Tab "Roles"
                 <Create Role> anklicken
                 Role name       admin
@@ -208,7 +208,7 @@ Das Mapping von Port `8443` auf `8843` und von `8080` auf `8880` ist in
             Required User Actions:      Überprüfen, dass nichts ausgewählt ist
             Username                    admin
             Email                       admin@acme.com
-            First name                  JavaScript
+            First name                  Go
             Last name                   Admin
             <Create> anklicken
             Tab "Credentials"
@@ -233,7 +233,7 @@ Das Mapping von Port `8443` auf `8843` und von `8080` auf `8880` ist in
             Required User Actions:      Überprüfen, dass nichts ausgewählt ist
             Username                    user
             Email                       user@acme.com
-            First name                  JavaScript
+            First name                  Go
             Last name                   User
             <Create> anklicken
             Tab "Credentials"
@@ -265,10 +265,10 @@ Das Mapping von Port `8443` auf `8843` und von `8080` auf `8880` ist in
                 <Save> anklicken
 ```
 
-Mit der URL `https://localhost:8843/realms/javascript/.well-known/openid-configuration`
+Mit der URL `https://localhost:8843/realms/go_workshop/.well-known/openid-configuration`
 kann man in einem Webbrowser die Konfiguration als JSON-Datensatz erhalten.
 
-Die Bestandteile der Basis-URL `https://localhost:8443/realms/javascript` sind in der
+Die Bestandteile der Basis-URL `https://localhost:8443/realms/go_workshop` sind in der
 Konfigurationsdatei `src\config\resources\app.toml` in der _Table_ `[keycloak]`
 eingetragen:
 
@@ -284,7 +284,7 @@ Im Wurzelverzeichnis des Projekts in der Datei `.env` muss man die
 Umgebungsvariable `CLIENT_SECRET` auf folgenden Wert aus _Keycloak_ setzen:
 
 - Menüpunkt `Clients`
-- `javascript-client` aus der Liste beim voreingestellten Tab `Clients list` auswählen
+- `go-client` aus der Liste beim voreingestellten Tab `Clients list` auswählen
 - Tab `Credentials` anklicken
 - Die Zeichenkette beim Label `Client Secret` kopieren.
 

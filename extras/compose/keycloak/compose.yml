@@ -57,8 +57,8 @@ services:
       - published: 9990
         target: 9000
     volumes:
-      - kc_data_reclaim:/opt/keycloak/data
-      - kc_tls_reclaim:/opt/keycloak/tls:ro
+      - kc_data_go:/opt/keycloak/data
+      - kc_tls_go:/opt/keycloak/tls:ro
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: tmp
       KC_BOOTSTRAP_ADMIN_PASSWORD: p
@@ -135,11 +135,11 @@ services:
           memory: 2G
 
 volumes:
-  kc_data_reclaim:
-    name: kc_data_reclaim
+  kc_data_go:
+    name: kc_data_go
     external: true
-  kc_tls_reclaim:
-    name: kc_tls_reclaim
+  kc_tls_go:
+    name: kc_tls_go
     external: true
 
 networks:
