@@ -30,6 +30,9 @@ func New(cfg *config.Config, pool *pgxpool.Pool) *http.Server {
 	svc := service.New(repo)
 	h := handler.New(svc)
 
+	// Frontend
+	router.StaticFile("/", "./web/index.html")
+
 	// Register routes
 	registerRoutes(router, h)
 
