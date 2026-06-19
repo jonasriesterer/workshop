@@ -18,9 +18,9 @@ import (
 )
 
 const (
-	msgInvalidID       = "invalid id: %s"
-	msgNotFound        = "autohaus with id %d not found"
-	msgInternalError   = "internal server error"
+	msgInvalidID     = "invalid id: %s"
+	msgNotFound      = "autohaus with id %d not found"
+	msgInternalError = "internal server error"
 )
 
 // AutohausHandler handles HTTP requests for the Autohaus resource.
