@@ -35,6 +35,8 @@ http:
           }
         ]
       }
+  auth:
+    type: none
 
 runtime:
   assertions:
@@ -42,8 +44,10 @@ runtime:
       operator: eq
       value: "401"
     - expression: res.headers['content-type']
-      operator: eq
-      value: application/problem+json
+      operator: matches
+      value: ^application\/json(; charset=utf-8)?$
+    - expression: res.body.error
+      operator: isNotEmpty
 
 settings:
   encodeUrl: true

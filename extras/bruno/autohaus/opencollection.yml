@@ -1,7 +1,7 @@
 opencollection: 1.0.0
 
 info:
-  name: autohaus_prisma
+  name: autohaus
 config:
   proxy:
     inherit: true
@@ -17,11 +17,11 @@ config:
 request:
   variables:
     - name: baseUrl
-      value: https://localhost:3000
+      value: http://localhost:3000
     - name: keycloakUrl
       value: https://localhost:8843
     - name: realm
-      value: javascript
+      value: go_workshop
     - name: realmUrl
       value: "{{keycloakUrl}}/realms/{{realm}}"
     - name: oidcUrl

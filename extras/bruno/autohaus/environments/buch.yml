@@ -1,10 +1,12 @@
 name: autohaus
 variables:
   - name: clientId
-    value: javascript-client
-  - secret: true
-    name: clientSecret
+    value: go-client
+  - name: clientSecret
+    value: jR8C0CG4bBHox9S16GmWSG9TFRMiy6fa
+    secret: true
   - name: username
     value: admin
-  - secret: true
-    name: password
+  - name: password
+    value: p
+    secret: true

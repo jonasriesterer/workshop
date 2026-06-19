@@ -6,16 +6,15 @@ info:
 request:
   auth:
     type: oauth2
-    flow: authorization_code
-    authorizationUrl: "{{oidcAuthUrl}}"
+    flow: resource_owner_password_credentials
     accessTokenUrl: "{{oidcTokenUrl}}"
-    callbackUrl: "{{baseUrl}}"
     credentials:
       clientId: "{{clientId}}"
-      clientSecret: 39MPSdijneaCTUIDrBX8vHPC1AzHlwa5
+      clientSecret: "{{clientSecret}}"
       placement: body
-    pkce:
-      disabled: true
+    resourceOwner:
+      username: "{{username}}"
+      password: "{{password}}"
     tokenConfig:
       id: credentials
       placement:
@@ -30,6 +29,6 @@ request:
     - name: password
       value: p
     - name: clientId
-      value: javascript-client
+      value: go-client
     - name: clientSecret
-      value: 39MPSdijneaCTUIDrBX8vHPC1AzHlwa5
+      value: jR8C0CG4bBHox9S16GmWSG9TFRMiy6fa

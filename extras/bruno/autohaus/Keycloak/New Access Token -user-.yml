@@ -1,7 +1,7 @@
 info:
-  name: New Access Token "admin"
+  name: New Access Token "user"
   type: http
-  seq: 1
+  seq: 2
 
 http:
   method: POST
@@ -23,7 +23,7 @@ http:
 runtime:
   variables:
     - name: username
-      value: admin
+      value: user
     - name: password
       value: p
     - name: clientId
@@ -34,21 +34,9 @@ runtime:
     - expression: res.status
       operator: eq
       value: "200"
-    - expression: res.headers['content-type']
-      operator: eq
-      value: application/json
     - expression: res.body.access_token
       operator: matches
       value: .+\..+\..+
-    - expression: res.body.expires_in
-      operator: eq
-      value: "1800"
-    - expression: res.body.refresh_token
-      operator: matches
-      value: .+\..+\..+
-    - expression: res.body.refresh_expires_in
-      operator: eq
-      value: "3600"
 
 settings:
   encodeUrl: true

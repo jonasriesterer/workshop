@@ -33,9 +33,9 @@ runtime:
     - name: password
       value: p
     - name: clientId
-      value: javascript-client
+      value: go-client
     - name: clientSecret
-      value: 0GzEhEG6MUnn0WqpgMHpTWH7tvMQzC3m
+      value: jR8C0CG4bBHox9S16GmWSG9TFRMiy6fa
   assertions:
     - expression: res.status
       operator: eq

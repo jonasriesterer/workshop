@@ -43,18 +43,12 @@ runtime:
       operator: eq
       value: "422"
     - expression: res.headers['content-type']
-      operator: eq
-      value: application/problem+json
+      operator: matches
+      value: ^application\/json(; charset=utf-8)?$
     - expression: res.body
       operator: isJson
-    - expression: res.body
+    - expression: res.body.errors
       operator: isNotEmpty
-    - expression: res.body.statusCode
-      operator: eq
-      value: "422"
-    - expression: res.body.title
-      operator: eq
-      value: Unprocessable Content
 
 settings:
   encodeUrl: true
