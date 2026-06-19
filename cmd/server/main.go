@@ -132,5 +132,8 @@ func newOIDCVerifier(ctx context.Context, cfg *config.Config) *oidc.IDTokenVerif
 	}
 	slog.Info("OIDC provider initialized", "issuer", cfg.KCIssuerURL)
 
-	return provider.Verifier(&oidc.Config{ClientID: cfg.KCClientID})
+	return provider.Verifier(&oidc.Config{
+		ClientID:        cfg.KCClientID,
+		SkipIssuerCheck: cfg.KCSkipTLSVerify, // issuer URL differs between external (localhost) and internal (keycloak) in dev
+	})
 }
