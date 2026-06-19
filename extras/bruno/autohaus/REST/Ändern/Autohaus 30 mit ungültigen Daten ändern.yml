@@ -1,0 +1,58 @@
+info:
+  name: Autohaus 1 mit ungültigen Daten ändern
+  type: http
+  seq: 6
+
+http:
+  method: PUT
+  url: "{{restUrl}}/:id"
+  headers:
+    - name: If-Match
+      value: '"0"'
+  params:
+    - name: id
+      value: "1"
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "name": "",
+        "username": "",
+        "email": "not-an-email",
+        "anzahlFahrzeuge": -5,
+        "gruendungsdatum": "12345-123-123",
+        "homepage": "invalid-homepage",
+        "telefonnummer": "",
+        "adresse": {
+          "plz": "123",
+          "ort": "",
+          "land": ""
+        }
+      }
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "422"
+    - expression: res.headers['content-type']
+      operator: eq
+      value: application/problem+json
+    - expression: res.body.statusCode
+      operator: eq
+      value: "422"
+    - expression: res.body.title
+      operator: eq
+      value: Unprocessable Content
+    - expression: res.body.detail
+      operator: isArray
+    - expression: res.body.detail
+      operator: isNotEmpty
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

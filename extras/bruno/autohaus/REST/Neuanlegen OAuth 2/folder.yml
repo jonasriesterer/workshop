@@ -1,0 +1,35 @@
+info:
+  name: Neuanlegen OAuth 2
+  type: folder
+  seq: 4
+
+request:
+  auth:
+    type: oauth2
+    flow: authorization_code
+    authorizationUrl: "{{oidcAuthUrl}}"
+    accessTokenUrl: "{{oidcTokenUrl}}"
+    callbackUrl: "{{baseUrl}}"
+    credentials:
+      clientId: "{{clientId}}"
+      clientSecret: 39MPSdijneaCTUIDrBX8vHPC1AzHlwa5
+      placement: body
+    pkce:
+      disabled: true
+    tokenConfig:
+      id: credentials
+      placement:
+        header: Bearer
+      source: access_token
+    settings:
+      autoFetchToken: true
+      autoRefreshToken: false
+  variables:
+    - name: username
+      value: admin
+    - name: password
+      value: p
+    - name: clientId
+      value: javascript-client
+    - name: clientSecret
+      value: 39MPSdijneaCTUIDrBX8vHPC1AzHlwa5
