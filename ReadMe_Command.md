@@ -26,6 +26,25 @@ go build -o bin/server ./cmd/server  # Binary erstellen
 go clean                             # Build-Artefakte löschen
 ```
 
+## Docker
+
+```bash
+# Image bauen
+docker build -t autohaus .
+
+# Mit Compose starten (inkl. Postgres & Keycloak, baut Image neu)
+docker compose -f extras/compose/autohaus/compose.yml up --build
+
+# Im Hintergrund starten
+docker compose -f extras/compose/autohaus/compose.yml up --build -d
+
+# Stoppen
+docker compose -f extras/compose/autohaus/compose.yml down
+
+# Logs anzeigen
+docker compose -f extras/compose/autohaus/compose.yml logs -f autohaus
+```
+
 ## Abhängigkeiten
 
 ```bash
