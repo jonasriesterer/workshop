@@ -1,6 +1,5 @@
 include:
   - path: ../postgres/compose.yml
-  - path: ../keycloak/compose.yml
 
 services:
   autohaus:
