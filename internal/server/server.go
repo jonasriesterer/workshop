@@ -4,11 +4,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/myorg/myservice/config"
+	"github.com/myorg/myservice/internal/handler"
+	"github.com/myorg/myservice/internal/repository"
+	"github.com/myorg/myservice/internal/service"
 )
 
 // New creates and configures an http.Server with a Gin router.
-func New(cfg *config.Config) *http.Server {
+func New(cfg *config.Config, pool *pgxpool.Pool) *http.Server {
 	if !cfg.IsDevelopment() {
 		gin.SetMode(gin.ReleaseMode)
 	}
@@ -19,8 +23,13 @@ func New(cfg *config.Config) *http.Server {
 	router.Use(gin.Logger())   // request logging
 	router.Use(gin.Recovery()) // recover from panics
 
+	// Dependency injection
+	repo := repository.New(pool)
+	svc := service.New(repo)
+	h := handler.New(svc)
+
 	// Register routes
-	registerRoutes(router)
+	registerRoutes(router, h)
 
 	return &http.Server{
 		Addr:    cfg.Addr(),
@@ -29,16 +38,15 @@ func New(cfg *config.Config) *http.Server {
 }
 
 // registerRoutes attaches all route groups to the router.
-// Add your API routes here as the service grows.
-func registerRoutes(r *gin.Engine) {
-	// Health check — used by load balancers, Docker, k8s liveness probes
+func registerRoutes(r *gin.Engine, h *handler.AutohausHandler) {
+	// Health check
 	r.GET("/health", healthHandler)
 
-	// Future API groups go here, e.g.:
-	// v1 := r.Group("/api/v1")
-	// {
-	//     v1.GET("/users", ...)
-	// }
+	rest := r.Group("/rest")
+	{
+		rest.GET("/:id", h.GetByID)
+		rest.POST("", h.Create)
+	}
 }
 
 func healthHandler(c *gin.Context) {
